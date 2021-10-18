@@ -1,5 +1,6 @@
 const celulas = document.querySelectorAll(".celula");
-let checarTurno = true;
+//let checarTurno = true;
+let fimDeJogo = false;
 const jogadorX = "X";
 const jogadorO = "O";
 
@@ -10,19 +11,36 @@ const combinacoes = [
     [0,3,5],
     [1,4,7],
     [2,5,8],
+    [0,3,6],
     [0,4,8],
     [2,4,6]
 ];
 
 document.addEventListener("click", (event) => {
-    if(event.target.matches(".celula")) {
-        jogar(event.target.id);
+    if(event.target.matches(".celula") && (!fimDeJogo)) {
+        jogar(event.target.id, jogadorX);
+        setTimeout(() => bot(), 500);
     }
 });
 
-function jogar(id) {
+function bot() {
+    const posicoesDisponiveis = [];
+    for (index in celulas) {
+        if (!isNaN(index)) {
+            if (!celulas[index].classList.contains("X") && !celulas[index].classList.contains("O")) {
+                posicoesDisponiveis.push(index);
+            }
+        }
+    }
+    const posicaoAleatoria = Math.floor(Math.random() * posicoesDisponiveis.length);
+    if (!fimDeJogo) {
+        jogar(posicoesDisponiveis[posicaoAleatoria], jogadorO);
+    }
+}
+
+function jogar(id, turno) {
     const celula = document.getElementById(id);
-    turno = checarTurno ? jogadorX : jogadorO;
+    //turno = checarTurno ? jogadorX : jogadorO;
     celula.textContent = turno;
     celula.classList.add(turno);
     checarVencedor(turno);
@@ -39,8 +57,6 @@ function checarVencedor(turno) {
         encerrarJogo(turno);
     } else if (checarEmpate()) {
         encerrarJogo();
-    } else {
-        checarTurno = !checarTurno;
     }
 }
 
@@ -64,6 +80,7 @@ function checarEmpate() {
 }
 
 function encerrarJogo(vencedor = null) {
+    fimDeJogo = true;
     const telaEscura = document.getElementById("tela-escura");
     const h2 = document.createElement("h2");
     const h3 = document.createElement("h3");
