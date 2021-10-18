@@ -64,9 +64,25 @@ function checarEmpate() {
 }
 
 function encerrarJogo(vencedor = null) {
+    const telaEscura = document.getElementById("tela-escura");
+    const h2 = document.createElement("h2");
+    const h3 = document.createElement("h3");
+    let mensagem = null;
+
+    telaEscura.style.display = "block";
+    telaEscura.appendChild(h2);
+    telaEscura.appendChild(h3);
+    
     if (vencedor) {
-        console.log(`O vencedor é o ${vencedor}`);
+        h2.innerHTML = `O vencedor é o ${vencedor}`;
     } else {
-        console.log("Empatou");
+        h2.innerHTML = "Empate";
     }
+
+    let contador = 3;
+    setInterval(() => {
+        h3.innerHTML = `Reiniciando em ${contador--}`;
+    }, 1000);
+
+    setTimeout(() => location.reload(),4000);
 }
